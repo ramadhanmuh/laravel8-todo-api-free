@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
+use Illuminate\Support\Facades\DB;
 
 class User extends Authenticatable
 {
@@ -95,5 +96,20 @@ class User extends Authenticatable
                         'email_confirmation_token' => null,
                         'email_verified_at' => time()
                     ]);
+    }
+
+    /**
+     * Mengubah data berdasarkan email
+     * 
+     * @param string $email
+     * @param array $input
+     * 
+     */
+    public function updateByEmail($email, $input)
+    {
+        $input['updated_at'] = time();
+
+        return self::where('email', $email)
+                    ->update($input);
     }
 }

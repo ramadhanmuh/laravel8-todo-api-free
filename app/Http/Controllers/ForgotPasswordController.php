@@ -4,10 +4,10 @@ namespace App\Http\Controllers;
  
 use App\Http\Controllers\Controller;
 use App\Models\User;
-use App\Http\Requests\RegisterUserRequest;
-use Illuminate\Support\Facades\Hash;
+use App\Http\Requests\ForgotPasswordRequest;
 use Illuminate\Support\Facades\Mail;
-use App\Mail\EmailConfirmation;
+use App\Mail\ForgotPassword;
+use Illuminate\Support\Facades\Hash;
  
 class ForgotPasswordController extends Controller
 {
@@ -17,28 +17,37 @@ class ForgotPasswordController extends Controller
      * @param  int  $id
      * @return \Illuminate\View\View
      */
-    public function sendEmail(RegisterUserRequest $request)
+    public function sendEmail(ForgotPasswordRequest $request)
     {
-        $input = $request->safe()->only(['name', 'email']);
+        $email = $request->email;
 
-        $input['password'] = Hash::make($request->password);
+        $password = $this->createUniquePassword();
 
-        $input['email_confirmation_token'] = bin2hex(random_bytes(16));
+        $input['password'] = Hash::make($password);
 
-        $data = User::createData($input);
+        User::updateByEmail($email, $input);
 
-        if (!$data) {
-            return response()->json([
-                'status' => false
-            ], 503);
-        }
-
-        $input['id'] = $data;
-
-        Mail::to($input['email'])->send(new EmailConfirmation($input));
+        Mail::to($email)->send(new ForgotPassword($password));
 
         return response()->json([
             'status' => true
         ]);
+    }
+
+    private function createUniquePassword()
+    {
+        $randomString = bin2hex(random_bytes(8));
+
+        // Create a unique ID based on the current timestamp
+        $uniqueId = uniqid();
+
+        // Concatenate the random string and the unique ID to create the URL string
+        $urlString = $randomString . $uniqueId;
+
+        // Encode the URL string for use in a URL
+        $secureUrl = urlencode($urlString);
+
+        // Output the secure URL
+        return $secureUrl;
     }
 }

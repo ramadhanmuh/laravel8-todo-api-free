@@ -24,7 +24,7 @@ use App\Http\Controllers\ForgotPasswordController;
 Route::prefix('users')->group(function () {
     Route::get('email/verify/{id}/{token}', EmailConfirmationController::class);
 
-    Route::middleware(['throttle:auth'])->group(function () {
+    Route::middleware(['throttle:send-email'])->group(function () {
         Route::post('register', [RegisterController::class, 'store']);
         Route::post('forgot-password', [ForgotPasswordController::class, 'sendEmail']);
     });

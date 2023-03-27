@@ -7,20 +7,20 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 
-class EmailConfirmation extends Mailable
+class ForgotPassword extends Mailable
 {
     use Queueable, SerializesModels;
 
-    public $user;
+    public $password;
 
     /**
      * Create a new message instance.
      *
      * @return void
      */
-    public function __construct($user)
+    public function __construct($password)
     {
-        $this->user = $user;
+        $this->password = $password;
     }
 
     /**
@@ -30,7 +30,8 @@ class EmailConfirmation extends Mailable
      */
     public function build()
     {
-        return $this->view('email.email-confirmation', $this->user)
-                    ->subject('Verifikasi Email');
+        return $this->view('email.forgot-password', [
+            'password' => $this->password
+        ])->subject('Lupa Kata Sandi');
     }
 }
