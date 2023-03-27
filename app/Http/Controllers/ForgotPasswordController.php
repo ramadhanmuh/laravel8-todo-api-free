@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\EmailConfirmation;
  
-class RegisterController extends Controller
+class ForgotPasswordController extends Controller
 {
     /**
      * Store new user
@@ -17,7 +17,7 @@ class RegisterController extends Controller
      * @param  int  $id
      * @return \Illuminate\View\View
      */
-    public function store(RegisterUserRequest $request)
+    public function sendEmail(RegisterUserRequest $request)
     {
         $input = $request->safe()->only(['name', 'email']);
 

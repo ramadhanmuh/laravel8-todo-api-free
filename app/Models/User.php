@@ -56,7 +56,7 @@ class User extends Authenticatable
     public $timestamps = false;
 
     /**
-     * Create data
+     * Membuat data
      * 
      * @param array $input
      * 
@@ -65,6 +65,35 @@ class User extends Authenticatable
     {
         $input['created_at'] = time();
 
-        return self::insert($input);
+        return self::insertGetId($input);
+    }
+
+    /**
+     * Mendapatkan data berdasarkan id dan token konfirmasi email
+     * 
+     * @param string $id
+     * @param string $email_confirmation_token
+     * 
+     */
+    public static function getByIdEmailConfirmationToken($id, $email_confirmation_token)
+    {
+        return self::where('id', $id)
+                    ->where('email_confirmation_token', $email_confirmation_token)
+                    ->first();
+    }
+
+    /**
+     * Mengubah data menjadi terferifikasi berdasarkan id
+     * 
+     * @param string $id
+     * 
+     */
+    public static function updateVerificationById($id)
+    {
+        return User::where('id', $id)
+                    ->update([
+                        'email_confirmation_token' => null,
+                        'email_verified_at' => time()
+                    ]);
     }
 }
