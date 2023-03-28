@@ -14,12 +14,12 @@ class CreateTodosTable extends Migration
     public function up()
     {
         Schema::create('todos', function (Blueprint $table) {
-            $table->uuid('id');
+            $table->uuid('id')->primary();
 
             $table->foreignId('user_id')
                     ->constrained()
                     ->onUpdate('cascade')
-                    ->onUpdate('cascade');
+                    ->onDelete('cascade');
 
             $table->string('task', 255);
 
@@ -28,8 +28,6 @@ class CreateTodosTable extends Migration
             $table->unsignedBigInteger('created_at');
 
             $table->unsignedBigInteger('updated_at')->nullable();
-
-            $table->primary('id');
         });
     }
 

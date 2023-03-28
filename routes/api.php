@@ -9,6 +9,7 @@ use App\Http\Controllers\LoginController;
 use App\Http\Controllers\LogoutController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\PasswordController;
+use App\Http\Controllers\TodoController;
 
 /*
 |--------------------------------------------------------------------------
@@ -38,8 +39,24 @@ Route::prefix('users')->group(function () {
 
     Route::middleware('has-token')->group(function () {
         Route::post('logout', [LogoutController::class, 'deleteToken']);
-        Route::get('profile', [ProfileController::class, 'index']);
-        Route::put('profile', [ProfileController::class, 'update']);
-        // Route::put('password', [PasswordController::class, 'update']);
+
+        Route::prefix('profile')->group(function () {
+            Route::get('/', [ProfileController::class, 'index']);
+            Route::put('/', [ProfileController::class, 'update']);
+            Route::delete('/', [ProfileController::class, 'destroy']);
+        });
+
+        Route::put('password', [PasswordController::class, 'update']);
+    });
+});
+
+Route::prefix('todos')->group(function () {
+    Route::middleware('has-token')->group(function () {
+        Route::controller(TodoController::class)->group(function () {
+            Route::post('/', 'store');
+            // Route::get('/', 'index');
+            // Route::put('/', 'update');
+            // Route::delete('/', 'destroy');
+        });
     });
 });

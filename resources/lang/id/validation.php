@@ -265,6 +265,7 @@ return [
     */
 
     'attributes' => [
+        'id' => 'Data',
         'email' => 'Email',
         'password' => 'Kata Sandi',
         'password_confirmation' => 'Konfirmasi Kata Sandi',

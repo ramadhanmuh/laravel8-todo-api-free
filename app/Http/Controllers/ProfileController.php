@@ -18,10 +18,13 @@ class ProfileController extends Controller
     public function index(Request $request)
     {        
         return response()->json([
-            'data' => User::find($request->user_id)
+            'data' => User::find($request->get('user_id'))
         ]);
     }
 
+    /**
+     * Mengubah data profil
+     */
     public function update(UpdateProfileRequest $request)
     {
         $input = $request->safe()->only(['name', 'email']);
@@ -33,5 +36,19 @@ class ProfileController extends Controller
         ]);
     }
 
+    /**
+     * Menghapus akun
+     */
+    public function destroy(Request $request)
+    {
+        if (!User::destroy($request->get('user_id'))) {
+            return response()->json([
+                'status' => false
+            ], 503);
+        }
 
+        return response()->json([
+            'status' => true
+        ]);
+    }
 }
