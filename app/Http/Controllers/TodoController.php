@@ -9,6 +9,33 @@ use App\Http\Requests\StoreTodoRequest;
  
 class TodoController extends Controller
 {
+    public function index(Request $request)
+    {
+        $input = $request->query();
+
+        $input['user_id'] = $request->get('user_id');
+
+        if (array_key_exists('selects', $input)) {
+            $input['selects'] = explode(',', $input['selects']);
+        }
+
+        if (array_key_exists('page', $input)) {
+            $input['page'] = intval($input['page']);
+            $input['offset'] = $input['page'] > 1 ? ($input['page'] * 10) - 10 : 0;
+        } else {
+            $input['page'] = 1;
+            $input['offset'] = 0;
+        }
+
+        $total = Todo::countData($input);
+
+        $data['pageTotal'] = intval(ceil($total / 10));
+
+        $data['data'] = Todo::getData($input);
+
+        return response()->json($data);
+    }
+
     public function store(StoreTodoRequest $request)
     {
         $input = $request->validated();

@@ -54,7 +54,7 @@ Route::prefix('todos')->group(function () {
     Route::middleware('has-token')->group(function () {
         Route::controller(TodoController::class)->group(function () {
             Route::post('/', 'store');
-            // Route::get('/', 'index');
+            Route::get('/', 'index');
             // Route::put('/', 'update');
             // Route::delete('/', 'destroy');
         });

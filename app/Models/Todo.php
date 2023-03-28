@@ -70,4 +70,118 @@ class Todo extends Model
         return self::where('user_id', $user_id)
                     ->delete();
     }
+
+    public static function getData($input)
+    {
+        $columns = [
+            'id', 'task', 'description', 'created_at',
+            'updated_at'
+        ];
+
+        $directions = ['asc', 'desc'];
+
+        if (array_key_exists('selects', $input)) {
+            foreach ($input['selects'] as $key => $value) {
+                if (!in_array($value, $columns)) {
+                    unset($input['selects'][$key]);
+                }
+            }
+
+            if (!count($input['selects'])) {
+                return null;
+            }
+        } else {
+            $input['selects'] = $columns;
+        }
+
+        $data = self::select($input['selects'])
+                    ->where('user_id', $input['user_id']);
+
+        if (array_key_exists('q', $input)) {
+            $data->where(function ($query) use ($input) {
+                $key = 0;
+                foreach ($input['selects'] as $key => $value) {
+                    if ($key) {
+                        $query->orWhere($value, 'LIKE', '%' . $input['q'] . '%');
+                    } else {
+                        $query->where($value, 'LIKE', '%' . $input['q'] . '%');
+                    }
+
+                    $key++;
+                }
+            });
+        }
+
+        if (array_key_exists('created_at', $input)) {
+            $data->where('created_at', '>', $input['created_at'] - 1);
+        }
+
+        if (array_key_exists('to_created_at', $input)) {
+            $data->where('created_at', '<', $input['created_at'] + 1);
+        }
+
+        if (array_key_exists('order_by', $input)) {
+            if (array_key_exists('order_direction', $input)) {
+                if (in_array($input['order_by'], $columns)) {
+                    if (in_array($input['order_direction'], $directions)) {
+                        $data->orderBy($input['order_by'], $input['order_direction']);
+                    }
+                }
+            }
+        }
+
+        return $data->offset($input['offset'])
+                ->limit(10)
+                ->get();
+    }
+
+    public static function countData($input)
+    {
+        $columns = [
+            'id', 'task', 'description', 'created_at',
+            'updated_at'
+        ];
+
+        if (array_key_exists('selects', $input)) {
+            foreach ($input['selects'] as $key => $value) {
+                if (!in_array($value, $columns)) {
+                    unset($input['selects'][$key]);
+                }
+            }
+
+            if (!count($input['selects'])) {
+                return null;
+            }
+        } else {
+            $input['selects'] = $columns;
+        }
+
+        $data = self::select('id')
+                    ->where('user_id', $input['user_id']);
+
+        if (array_key_exists('q', $input)) {
+            $data->where(function ($query) use ($input) {
+                $key = 0;
+                foreach ($input['selects'] as $key => $value) {
+                    if ($key) {
+                        $query->orWhere($value, 'LIKE', '%' . $input['q'] . '%');
+                    } else {
+                        $query->where($value, 'LIKE', '%' . $input['q'] . '%');
+                    }
+
+                    $key++;
+                }
+            });
+        }
+
+        if (array_key_exists('created_at', $input)) {
+            $data->where('created_at', '>', $input['created_at'] - 1);
+        }
+
+        if (array_key_exists('to_created_at', $input)) {
+            $data->where('created_at', '<', $input['created_at'] + 1);
+        }
+
+        return $data->count();
+    }
 }
