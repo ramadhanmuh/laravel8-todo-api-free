@@ -6,6 +6,9 @@ use App\Http\Controllers\RegisterController;
 use App\Http\Controllers\EmailConfirmationController;
 use App\Http\Controllers\ForgotPasswordController;
 use App\Http\Controllers\LoginController;
+use App\Http\Controllers\LogoutController;
+use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\PasswordController;
 
 /*
 |--------------------------------------------------------------------------
@@ -32,4 +35,11 @@ Route::prefix('users')->group(function () {
 
     Route::post('login', [LoginController::class, 'authenticate'])
             ->middleware(['throttle:auth']);
+
+    Route::middleware('has-token')->group(function () {
+        Route::post('logout', [LogoutController::class, 'deleteToken']);
+        Route::get('profile', [ProfileController::class, 'index']);
+        // Route::put('profile', [ProfileController::class, 'update']);
+        // Route::put('password', [PasswordController::class, 'update']);
+    });
 });

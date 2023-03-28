@@ -24,6 +24,8 @@ class CreateUserTokensTable extends Migration
             $table->unsignedTinyInteger('remember_me');
 
             $table->unsignedBigInteger('created_at');
+
+            $table->unsignedBigInteger('expired_at');
         });
     }
 

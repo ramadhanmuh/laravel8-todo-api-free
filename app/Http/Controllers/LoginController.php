@@ -30,13 +30,16 @@ class LoginController extends Controller
 
         $input = [
             'user_id' => $data->id,
-            'token' => uniqid()
+            'token' => uniqid(),
+            'created_at' => time()
         ];
 
         if (empty($request->remember_me)) {
             $input['remember_me'] = 0;
+            $input['expired_at'] = $input['created_at'] + 10800;
         } else {
             $input['remember_me'] = 1;
+            $input['expired_at'] = $input['created_at'] + 7884000;
         }
 
         UserToken::createData($input);

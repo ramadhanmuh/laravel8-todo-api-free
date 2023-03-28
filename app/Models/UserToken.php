@@ -17,6 +17,7 @@ class UserToken extends Model
         'token',
         'remember_me',
         'created_at',
+        'expired_at'
     ];
 
     /**
@@ -41,8 +42,24 @@ class UserToken extends Model
      */
     public static function createData($input)
     {
-        $input['created_at'] = time();
-
         return self::insert($input);
+    }
+
+    /**
+     * Mendapatkan data berdasarkan token
+     * 
+     * @param string $token
+     * 
+     */
+    public static function getByToken($token)
+    {
+        return self::where('token', $token)
+                    ->first();
+    }
+
+    public static function deleteByUserId($user_id)
+    {
+        return self::where('user_id', $user_id)
+                    ->delete();
     }
 }
