@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\RegisterController;
 use App\Http\Controllers\EmailConfirmationController;
 use App\Http\Controllers\ForgotPasswordController;
+use App\Http\Controllers\LoginController;
 
 /*
 |--------------------------------------------------------------------------
@@ -28,4 +29,7 @@ Route::prefix('users')->group(function () {
         Route::post('register', [RegisterController::class, 'store']);
         Route::post('forgot-password', [ForgotPasswordController::class, 'sendEmail']);
     });
+
+    Route::post('login', [LoginController::class, 'authenticate'])
+            ->middleware(['throttle:auth']);
 });

@@ -17,9 +17,7 @@ class EmailConfirmationController extends Controller
         $data = User::getByIdEmailConfirmationToken($id, $token);
 
         if (empty($data)) {
-            return response()->json([
-                'status' => false
-            ], 404);
+            abort(404);
         }
 
         User::updateVerificationById($id);

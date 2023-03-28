@@ -105,11 +105,25 @@ class User extends Authenticatable
      * @param array $input
      * 
      */
-    public function updateByEmail($email, $input)
+    public static function updateByEmail($email, $input)
     {
         $input['updated_at'] = time();
 
         return self::where('email', $email)
                     ->update($input);
+    }
+
+    /**
+     * Mendapatkan 1 data berdasarkan email
+     * 
+     * @param string $email
+     * 
+     */
+    public static function getActiveDataByEmail($email)
+    {
+        return self::select('id', 'name', 'email', 'password', 'created_at', 'updated_at')
+                    ->where('email', $email)
+                    ->whereNotNull('email_verified_at')
+                    ->first();
     }
 }
