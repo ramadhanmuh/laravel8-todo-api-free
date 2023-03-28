@@ -126,4 +126,10 @@ class User extends Authenticatable
                     ->whereNotNull('email_verified_at')
                     ->first();
     }
+
+    public function updateById($id, $input)
+    {
+        return self::where('id', $id)
+                    ->update($input);
+    }
 }

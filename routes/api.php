@@ -39,7 +39,7 @@ Route::prefix('users')->group(function () {
     Route::middleware('has-token')->group(function () {
         Route::post('logout', [LogoutController::class, 'deleteToken']);
         Route::get('profile', [ProfileController::class, 'index']);
-        // Route::put('profile', [ProfileController::class, 'update']);
+        Route::put('profile', [ProfileController::class, 'update']);
         // Route::put('password', [PasswordController::class, 'update']);
     });
 });

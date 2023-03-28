@@ -35,7 +35,7 @@ class HasToken
             return $this->sendFailedResponse();
         }
 
-        $request->user_id = $userToken->user_id;
+        $request->attributes->add(['user_id' => $userToken->user_id]);
 
         return $next($request);
     }
