@@ -184,4 +184,10 @@ class Todo extends Model
 
         return $data->count();
     }
+
+    public static function updateById($id, $input)
+    {
+        return self::where('id', $id)
+                    ->update($input);
+    }
 }

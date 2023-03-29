@@ -55,8 +55,11 @@ Route::prefix('todos')->group(function () {
         Route::controller(TodoController::class)->group(function () {
             Route::post('/', 'store');
             Route::get('/', 'index');
-            // Route::put('/', 'update');
-            // Route::delete('/', 'destroy');
+            Route::get('count', 'count');
+            Route::get('{id}', 'show');
+            Route::put('{id}', 'update');
+            Route::delete('{id}', 'destroy');
+            Route::delete('/', 'destroy');
         });
     });
 });
